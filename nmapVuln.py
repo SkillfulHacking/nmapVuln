@@ -6,7 +6,7 @@ from subprocess import call
 
 def nmapScan(tgtHost):
     nmScan = nmap.PortScanner()
-    nmScan.scan(tgtHost, '0-1023', '-sV -sC = banner')
+    nmScan.scan(tgtHost, '0-1023', '-sV --script=banner')
     ports=nmScan[tgtHost]['tcp'].keys()
     for port in ports:
         name = nmScan[tgtHost]['tcp'][int(port)]['name']
