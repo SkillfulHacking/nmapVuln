@@ -14,7 +14,7 @@ def nmapScan(tgtHost):
         state = nmScan[tgtHost]['tcp'][int(port)]['state']
         version = nmScan[tgtHost]['tcp'][int(port)]['version']
         print " [*] " + tgtHost + " tcp/" + str(port) + " " + state + " " + name + " " + product + " " + version + "\n"
-        if product == none:
+        if product == None:
             findVuln(name,version)
         else:
             findVuln(product,version)
