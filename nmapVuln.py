@@ -14,7 +14,10 @@ def nmapScan(tgtHost):
         state = nmScan[tgtHost]['tcp'][int(port)]['state']
         version = nmScan[tgtHost]['tcp'][int(port)]['version']
         print " [*] " + tgtHost + " tcp/" + str(port) + " " + state + " " + name + " " + product + " " + version + "\n"
-        findVuln(product,version)
+        if product = none:
+            findVuln(name,version)
+        else:
+            findVuln(product,version)
 
 def findVuln(product,version):
     call(["searchsploit", product, version])
@@ -28,5 +31,6 @@ def main():
         print parser.usage
         exit(0)
     nmapScan(tgtHost)
+
 if __name__ == '__main__':
     main()
