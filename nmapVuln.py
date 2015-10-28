@@ -7,7 +7,11 @@ from subprocess import call
 def nmapScan(tgtHost):
     nmScan = nmap.PortScanner()
     nmScan.scan(tgtHost, '0-1023', '-sV --script=banner')
-    ports=nmScan[tgtHost]['tcp'].keys()
+    if 'tcp' in nmScan[tgtHost].keys():
+        ports=nmScan[tgtHost]['tcp'].keys()
+    else:
+        print "[-] No open TCP ports"
+        exit(0)
     for port in ports:
         name = nmScan[tgtHost]['tcp'][int(port)]['name']
         product = nmScan[tgtHost]['tcp'][int(port)]['product']
