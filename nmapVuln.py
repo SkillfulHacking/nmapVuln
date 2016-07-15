@@ -2,10 +2,17 @@
 
 import nmap
 import optparse
+import socket
 from subprocess import call
 
 def nmapScan(tgtHost):
     nmScan = nmap.PortScanner()
+    try:
+        socket.inet_aton(tgtHost)
+        print '[+] Scanning ' + tgtHost + '\n'
+    except socket.error:
+        print '[-] Invalid host or IP address\n'
+        exit(0)
     nmScan.scan(tgtHost, '0-1023', '-sV --script=banner')
     if  nmScan[tgtHost].has_key('tcp'):
         ports=nmScan[tgtHost]['tcp'].keys()
@@ -20,8 +27,10 @@ def nmapScan(tgtHost):
         print " [*] " + tgtHost + " tcp/" + str(port) + " " + state + " " + name + " " + product + " " + version + "\n"
         if product == None or product == True:
             findVuln(name,version)
+            print '[+] Searchsploit ' + name + ' ' + version + '\n'
         else:
             findVuln(product,version)
+            print '[+] Searchsploit ' + product + ' ' + version + '\n'
 
 def findVuln(product,version):
     call(["searchsploit", product, version])
