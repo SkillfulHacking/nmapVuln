@@ -5,7 +5,7 @@ import optparse
 import socket
 from subprocess import call
 
-def nmapScan(tgtHost):
+def nmapScan(tgtHost,options):
     nmScan = nmap.PortScanner()
     try:
         socket.inet_aton(tgtHost)
@@ -13,7 +13,12 @@ def nmapScan(tgtHost):
     except socket.error:
         print '[-] Invalid host or IP address\n'
         exit(0)
-    nmScan.scan(tgtHost, '0-1023', '-sV --script=banner')
+    if options.scanFull:
+        print '[+] Performing full scan of 65535 ports' 
+        nmScan.scan(tgtHost, '0-65535', '-sV --script=banner')
+    else:
+        print '[+] Scanning up to port 1024'
+        nmScan.scan(tgtHost, '0-1024', '-sV --script=banner')
     if  nmScan[tgtHost].has_key('tcp'):
         ports=nmScan[tgtHost]['tcp'].keys()
     else:
@@ -37,13 +42,14 @@ def findVuln(product,version):
 
 def main():
     parser = optparse.OptionParser('usage: %prog -H <target host>')
-    parser.add_option('-H', dest='tgtHost', type='string', help='specify target host')
+    parser.add_option('-F', '--full', dest='scanFull', action='store_true', help='full scan 65535 ports')
+    parser.add_option('-H', '--host', dest='tgtHost', type='string', help='specify target host')
     (options, args) = parser.parse_args()
     tgtHost = options.tgtHost
     if (tgtHost == None):
         print parser.usage
         exit(0)
-    nmapScan(tgtHost)
+    nmapScan(tgtHost,options)
 
 if __name__ == '__main__':
     main()
