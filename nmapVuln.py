@@ -16,6 +16,9 @@ def nmapScan(tgtHost,options):
     if options.scanFull:
         print '[+] Performing full scan of 65535 ports' 
         nmScan.scan(tgtHost, '0-65535', '-sV --script=banner')
+    elif options.scanPplr:
+        print '[+] Performing scan of 1000 popular ports'
+        nmScan.scan(hosts=tgtHost, arguments='-sV --top-ports 1000  --script=banner')
     else:
         print '[+] Scanning up to port 1024'
         nmScan.scan(tgtHost, '0-1024', '-sV --script=banner')
@@ -44,6 +47,7 @@ def main():
     parser = optparse.OptionParser('usage: %prog -H <target host>')
     parser.add_option('-F', '--full', dest='scanFull', action='store_true', help='full scan 65535 ports')
     parser.add_option('-H', '--host', dest='tgtHost', type='string', help='specify target host')
+    parser.add_option('-P', '--popular', dest='scanPplr', action='store_true', help='scan top 1000 \033[1mpopular\033[0m ports')
     (options, args) = parser.parse_args()
     tgtHost = options.tgtHost
     if (tgtHost == None):
